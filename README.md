@@ -3,7 +3,7 @@
 A web app that makes task management engaging through XP-based progress and visual feedback.
 
 ## 🔗 Live
-mahasarangan921-stack.github.io/SparkRise/
+https://mahasarangan921-stack.github.io/SparkRise/
 
 ## ✨ Features
 - XP-based plant growth system for task completion  
