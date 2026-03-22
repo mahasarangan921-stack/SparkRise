@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SparkRise — Learn. Track. Grow.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0e1210;--bg2:#151a16;--bg3:#1c2420;
+  --card:#1e2822ee;--border:#2a3830;
+  --green:#4caf50;--green2:#66bb6a;--green-dim:#2e7d3230;
+  --gold:#f4c542;--gold-dim:#f4c54220;
+  --text:#eaeaea;--text2:#9e9e9e;--text3:#6b7b6e;
+  --radius:14px;--radius-sm:8px;
+  --tr:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:#0e1210;color:var(--text);}
+
+/* ── WALLPAPER ── */
+#wallpaper{
+  position:fixed;top:0;left:0;
+  width:100vw;height:100vh;
+  z-index:0;display:block;
+  pointer-events:none;
+}
+
+/* ── APP SHELL ── */
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:#0e121088;backdrop-filter:blur(20px);
+  border-bottom:1px solid #2a383860;
+  padding:0 24px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{display:flex;align-items:center;gap:8px;font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--text);}
+.nav-logo span{color:var(--green);}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:ldp 2.5s ease-in-out infinite;}
+@keyframes ldp{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.8);opacity:0.4;}}
+.nav-links{display:flex;gap:2px;}
+.nav-link{padding:6px 13px;border-radius:30px;font-size:0.82rem;font-weight:500;color:var(--text2);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.nav-link:hover{color:var(--text);background:#ffffff0a;}
+.nav-link.active{color:var(--green);background:var(--green-dim);}
+.nav-right{display:flex;gap:8px;align-items:center;}
+.nav-smart{padding:7px 14px;border-radius:30px;background:var(--gold-dim);border:1px solid #f4c54250;color:var(--gold);font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.nav-smart:hover{background:#f4c54230;transform:translateY(-1px);}
+.nav-add{padding:7px 18px;border-radius:30px;background:var(--green);color:#0e1210;font-size:0.82rem;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.nav-add:hover{background:var(--green2);transform:translateY(-1px);box-shadow:0 4px 16px #4caf5040;}
+
+/* ── PAGES ── */
+.page{display:none;flex:1;padding:24px 28px;max-width:1080px;margin:0 auto;width:100%;}
+.page.active{display:block;animation:fadeUp 0.35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── GLASSMORPHISM CARDS ── */
+.glass{background:#1e282288;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #2a383860;border-radius:20px;}
+.glass:hover{border-color:#2e5c3060;}
+
+/* ── HOME HERO ── */
+.home-hero{
+  background:linear-gradient(135deg,#151a1680 0%,#1a2e1e80 100%);
+  backdrop-filter:blur(16px);border:1px solid #2a383860;
+  border-radius:20px;padding:32px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.home-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#4caf5015 0%,transparent 70%);pointer-events:none;}
+.hero-greeting{font-size:0.78rem;color:var(--green);font-weight:600;text-transform:uppercase;letter-spacing:2.5px;margin-bottom:6px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;margin-bottom:5px;}
+.hero-quote{font-size:0.86rem;color:var(--text2);font-style:italic;margin-bottom:24px;line-height:1.6;}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;}
+.stat-card{
+  background:#1e282260;backdrop-filter:blur(8px);
+  border:1px solid #2a383860;border-radius:12px;
+  padding:14px 18px;flex:1;min-width:100px;transition:var(--tr);
+}
+.stat-card:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:0 6px 20px #00000050;}
+.stat-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.stat-value{font-size:1.5rem;font-weight:700;}
+.stat-value.green{color:var(--green);}
+.stat-value.gold{color:var(--gold);}
+
+/* ── HOME GRID ── */
+.home-grid{display:grid;grid-template-columns:260px 1fr;gap:18px;margin-bottom:18px;}
+@media(max-width:700px){.home-grid{grid-template-columns:1fr;}}
+
+/* ── PLANT CARD ── */
+.plant-card{
+  background:#1e282280;backdrop-filter:blur(16px);
+  border:1px solid #2a383870;border-radius:20px;
+  padding:24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  min-height:200px;transition:var(--tr);position:relative;overflow:hidden;
+}
+.plant-card:hover{border-color:var(--green);}
+.plant-svg-wrap{width:110px;height:110px;margin-bottom:12px;position:relative;}
+.plant-svg-wrap svg{width:100%;height:100%;filter:drop-shadow(0 0 14px #4caf5060);}
+.plant-stage-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--green);margin-bottom:3px;}
+.plant-stage-sub{font-size:0.75rem;color:var(--text2);}
+.plant-cycle-dots{display:flex;gap:5px;margin-top:10px;}
+.plant-cycle-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:var(--tr);}
+.plant-cycle-dot.active{background:var(--green);box-shadow:0 0 6px var(--green);}
+
+/* ── PROGRESS CARD ── */
+.progress-card{
+  background:#1e282280;backdrop-filter:blur(16px);
+  border:1px solid #2a383870;border-radius:20px;
+  padding:24px;transition:var(--tr);
+}
+.progress-card:hover{border-color:var(--green);}
+.progress-card h3{font-size:0.9rem;font-weight:600;margin-bottom:18px;}
+.bar-wrap{margin-bottom:14px;}
+.bar-label{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);margin-bottom:6px;}
+.bar-bg{background:#0e121060;border-radius:30px;height:9px;overflow:hidden;border:1px solid #2a383840;}
+.bar-fill{height:100%;border-radius:30px;background:linear-gradient(90deg,var(--green),var(--green2));transition:width 1.2s cubic-bezier(0.4,0,0.2,1);box-shadow:0 0 10px #4caf5040;position:relative;overflow:hidden;}
+.bar-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,#ffffff20,transparent);animation:shim 2.5s infinite;}
+@keyframes shim{from{transform:translateX(-100%);}to{transform:translateX(200%);}}
+.xp-bg{background:#0e121060;border-radius:30px;height:5px;overflow:hidden;border:1px solid #2a383840;}
+.xp-fill{height:100%;border-radius:30px;background:linear-gradient(90deg,var(--gold),#ffb300);transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.level-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold-dim);border:1px solid #f4c54250;color:var(--gold);border-radius:30px;padding:4px 12px;font-size:0.78rem;font-weight:600;margin-top:14px;}
+
+/* ── SECTION CARDS ── */
+.section-card{background:#1e282280;backdrop-filter:blur(16px);border:1px solid #2a383860;border-radius:20px;padding:22px;margin-bottom:18px;}
+.section-card h3{font-size:0.9rem;font-weight:600;margin-bottom:13px;}
+
+/* ── UPCOMING EVENTS ── */
+.event-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#0e121050;border-radius:10px;margin-bottom:8px;border:1px solid #2a383850;transition:var(--tr);}
+.event-item:hover{border-color:var(--green);transform:translateX(4px);}
+.event-date-box{min-width:48px;height:48px;border-radius:10px;background:var(--green-dim);border:1px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.event-date-day{font-size:1.1rem;font-weight:700;color:var(--green);line-height:1;}
+.event-date-mon{font-size:0.6rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;}
+.event-info{flex:1;}
+.event-title{font-size:0.875rem;font-weight:600;margin-bottom:2px;}
+.event-meta{font-size:0.75rem;color:var(--text2);}
+.event-badge{font-size:0.7rem;padding:2px 8px;border-radius:20px;font-weight:600;}
+.event-badge.soon{background:#f4c54220;color:var(--gold);border:1px solid #f4c54240;}
+.event-badge.today{background:#4caf5020;color:var(--green);border:1px solid #4caf5040;}
+.event-badge.overdue{background:#ef535020;color:#ef5350;border:1px solid #ef535040;}
+
+/* ── REMINDERS ── */
+.reminder-item{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:#0e121050;border-radius:9px;margin-bottom:7px;border-left:3px solid var(--gold);transition:var(--tr);}
+.reminder-item:hover{transform:translateX(4px);background:#0e121080;}
+.reminder-name{font-size:0.85rem;font-weight:500;}
+.reminder-due{font-size:0.73rem;color:var(--gold);font-weight:600;}
+.reminder-due.overdue{color:#ef5350;}
+.calm-msg{color:var(--text2);font-size:0.85rem;text-align:center;padding:16px;font-style:italic;}
+
+/* ── BADGES ── */
+.badges-row{display:flex;gap:8px;flex-wrap:wrap;}
+.badge-chip{display:flex;align-items:center;gap:5px;background:#0e121050;border:1px solid var(--border);border-radius:30px;padding:5px 12px;font-size:0.78rem;color:var(--text3);transition:var(--tr);}
+.badge-chip.earned{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);box-shadow:0 0 10px #f4c54218;}
+
+/* ── ACTIVITIES ── */
+.page-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:18px;}
+.filters-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+.filter-btn{padding:6px 14px;border-radius:30px;border:1px solid var(--border);background:none;color:var(--text2);font-size:0.8rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.filter-btn:hover{border-color:var(--green);color:var(--green);}
+.filter-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green);}
+.sort-sel{padding:6px 12px;border-radius:30px;border:1px solid var(--border);background:#1e2822;color:var(--text2);font-size:0.8rem;cursor:pointer;font-family:'DM Sans',sans-serif;margin-left:auto;}
+
+.activity-list{display:flex;flex-direction:column;gap:11px;}
+.activity-card{
+  background:#1e282280;backdrop-filter:blur(16px);
+  border:1px solid #2a383860;border-radius:14px;
+  padding:18px 20px;transition:var(--tr);position:relative;
+}
+.activity-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.activity-card:hover{border-color:#3a504060;box-shadow:0 6px 24px #00000050;}
+.activity-card.completed{opacity:0.6;}
+.activity-card.completed::before{background:var(--green);}
+.activity-card.overdue::before{background:#ef5350;}
+.activity-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.activity-name{font-size:0.95rem;font-weight:600;}
+.activity-desc{font-size:0.83rem;color:var(--text2);line-height:1.5;margin-bottom:10px;}
+.activity-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:0.71rem;font-weight:500;}
+.tag.academic{background:#1a3a5c25;color:#64b5f6;border:1px solid #1a3a5c50;}
+.tag.personal{background:#1a3a3a25;color:#80cbc4;border:1px solid #1a4a4a50;}
+.tag.health{background:#2e1a3a25;color:#ce93d8;border:1px solid #3a1a4a50;}
+.tag.project{background:#3a2a1a25;color:#ffb74d;border:1px solid #4a3a1a50;}
+.tag.high{background:#3a1a1a25;color:#ef9a9a;border:1px solid #5a2a2a50;}
+.tag.medium{background:#3a2e1a25;color:#ffe082;border:1px solid #4a3e2a50;}
+.tag.low{background:#1a3a2a25;color:#a5d6a7;border:1px solid #2a4a3a50;}
+.tag.pending{background:#2a2a1a25;color:#fff176;border:1px solid #4a4a2a50;}
+.tag.done-tag{background:var(--green-dim);color:var(--green);border:1px solid #2e5c3050;}
+.tag.over-tag{background:#3a1a1a50;color:#ef5350;border:1px solid #5a2a2a50;}
+.xp-tag{color:var(--gold);font-size:0.76rem;font-weight:700;}
+.activity-actions{display:flex;gap:7px;align-items:center;margin-top:12px;}
+.btn-complete{padding:6px 16px;border-radius:30px;background:var(--green-dim);border:1px solid var(--green);color:var(--green);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-complete:hover{background:var(--green);color:#0e1210;}
+.btn-complete.done{background:var(--green);color:#0e1210;cursor:default;}
+.btn-icon{width:30px;height:30px;border-radius:50%;background:#0e121050;border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:var(--tr);}
+.btn-icon:hover{border-color:var(--green);color:var(--green);}
+.btn-icon.del:hover{border-color:#ef5350;color:#ef5350;}
+
+/* ── CALENDAR ── */
+.cal-card{background:#1e282280;backdrop-filter:blur(16px);border:1px solid #2a383860;border-radius:20px;padding:24px;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cal-month-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;}
+.cal-nav-btns{display:flex;gap:7px;}
+.cal-btn{width:32px;height:32px;border-radius:50%;background:#0e121050;border:1px solid var(--border);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);font-size:0.95rem;}
+.cal-btn:hover{border-color:var(--green);color:var(--green);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-dn{text-align:center;font-size:0.68rem;color:var(--text3);font-weight:600;text-transform:uppercase;padding:7px 0;}
+.cal-day{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;cursor:pointer;position:relative;transition:var(--tr);color:var(--text2);}
+.cal-day:hover{background:#2a383840;color:var(--text);}
+.cal-day.today{color:var(--green);font-weight:700;background:var(--green-dim);}
+.cal-day.has-task::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);}
+.cal-day.selected{background:var(--green);color:#0e1210;font-weight:700;}
+.cal-day.empty{cursor:default;pointer-events:none;}
+.cal-tasks-section{margin-top:18px;}
+.cal-tasks-section h4{font-size:0.85rem;color:var(--text2);margin-bottom:10px;}
+.cal-task-item{padding:9px 13px;background:#0e121050;border-radius:9px;margin-bottom:7px;border-left:3px solid var(--green);font-size:0.84rem;transition:var(--tr);}
+.cal-task-item:hover{background:#0e121080;}
+
+/* ── REPORTS ── */
+.reports-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px;}
+@media(max-width:600px){.reports-grid{grid-template-columns:1fr;}}
+.rep-stat{background:#1e282280;backdrop-filter:blur(16px);border:1px solid #2a383860;border-radius:14px;padding:22px;text-align:center;transition:var(--tr);}
+.rep-stat:hover{border-color:var(--green);transform:translateY(-2px);}
+.rep-icon{font-size:1.6rem;margin-bottom:7px;}
+.rep-val{font-size:2rem;font-weight:700;color:var(--green);font-family:'Playfair Display',serif;}
+.rep-label{font-size:0.75rem;color:var(--text2);margin-top:3px;}
+.weekly-card{background:#1e282280;backdrop-filter:blur(16px);border:1px solid #2a383860;border-radius:20px;padding:24px;}
+.weekly-card h3{font-size:0.9rem;font-weight:600;margin-bottom:20px;}
+.weekly-bars{display:flex;gap:9px;align-items:flex-end;height:100px;}
+.wbar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.wbar-bg{width:100%;background:#0e121060;border-radius:5px;flex:1;display:flex;align-items:flex-end;overflow:hidden;border:1px solid #2a383840;}
+.wbar-fill{width:100%;border-radius:5px;background:linear-gradient(180deg,var(--green2),var(--green));transition:height 1.2s ease;}
+.wbar-day{font-size:0.68rem;color:var(--text3);}
+
+/* ── PROGRESS PAGE ── */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:700px){.prog-grid{grid-template-columns:1fr;}}
+.donut-wrap{position:relative;width:160px;height:160px;margin:0 auto 14px;}
+.donut-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+.donut-bg-c{fill:none;stroke:#1c242060;stroke-width:14;}
+.donut-fill-c{fill:none;stroke:var(--green);stroke-width:14;stroke-linecap:round;transition:stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1);filter:drop-shadow(0 0 6px #4caf5060);}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.donut-pct{font-size:1.5rem;font-weight:700;font-family:'Playfair Display',serif;}
+.donut-sub-txt{font-size:0.68rem;color:var(--text2);}
+
+/* ── MODAL (shared) ── */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:#00000090;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;animation:fadeUp 0.22s ease;}
+.modal{background:#1a231d;border:1px solid #2a383880;border-radius:20px;padding:30px;width:100%;max-width:480px;box-shadow:0 24px 64px #00000099;}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:22px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:0.76rem;color:var(--text2);margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 13px;background:#0e121070;border:1px solid #2a383870;border-radius:9px;color:var(--text);font-size:0.88rem;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.form-textarea{height:70px;resize:none;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px #4caf5015;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.modal-actions{display:flex;gap:9px;margin-top:22px;}
+.btn-cancel{flex:1;padding:9px;border-radius:30px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-cancel:hover{border-color:var(--text);color:var(--text);}
+.btn-save{flex:2;padding:9px;border-radius:30px;background:var(--green);border:none;color:#0e1210;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-save:hover{background:var(--green2);}
+
+/* ── SMART TASK MODAL ── */
+.smart-modal{max-width:540px;}
+.smart-result{background:#0e121060;border:1px solid #2a383860;border-radius:12px;padding:16px;margin-top:14px;display:none;}
+.smart-result.show{display:block;}
+.smart-task-item{padding:10px 13px;background:#1e282260;border-radius:9px;margin-bottom:8px;border-left:3px solid var(--green);cursor:pointer;transition:var(--tr);}
+.smart-task-item:hover{background:#1e282290;transform:translateX(4px);}
+.smart-task-name{font-size:0.88rem;font-weight:600;margin-bottom:3px;}
+.smart-task-meta{font-size:0.74rem;color:var(--text2);}
+.ai-thinking{text-align:center;padding:20px;color:var(--text2);font-size:0.85rem;}
+.ai-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin:0 2px;animation:aiDot 1.2s ease-in-out infinite;}
+.ai-dot:nth-child(2){animation-delay:0.2s;}
+.ai-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes aiDot{0%,80%,100%{transform:scale(0);opacity:0.3;}40%{transform:scale(1);opacity:1;}}
+
+/* ── FOCUS MODE ── */
+.focus-overlay{position:fixed;inset:0;z-index:300;background:#0a0f0bdd;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+.focus-overlay.open{display:flex;animation:fadeUp 0.4s ease;}
+.focus-bubble{background:#1a231d;border:1px solid #2a383880;border-radius:24px;padding:40px;max-width:460px;width:100%;margin-bottom:24px;}
+.focus-icon{font-size:2.2rem;margin-bottom:14px;}
+.focus-task-name{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:7px;}
+.focus-desc-txt{color:var(--text2);font-size:0.87rem;margin-bottom:24px;line-height:1.6;}
+.focus-timer{font-family:'DM Mono',monospace;font-size:3.6rem;color:var(--green);margin-bottom:24px;letter-spacing:4px;text-shadow:0 0 20px #4caf5050;}
+.focus-acts{display:flex;gap:10px;justify-content:center;}
+.btn-fs{padding:9px 26px;border-radius:30px;background:var(--green);border:none;color:#0e1210;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-fs:hover{background:var(--green2);}
+.btn-fd{padding:9px 26px;border-radius:30px;background:none;border:1px solid var(--green);color:var(--green);cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-fb{padding:9px 22px;border-radius:30px;background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:var(--tr);}
+.btn-fb:hover{color:var(--text);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:26px;right:26px;z-index:400;background:#1a231d;border:1px solid var(--green);border-radius:12px;padding:13px 20px;color:var(--text);font-size:0.85rem;box-shadow:0 8px 32px #00000080;display:none;max-width:300px;}
+.toast.show{display:block;animation:slideUp 0.3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SPARK BURST ── */
+.spark{position:fixed;pointer-events:none;z-index:500;width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:sFly 0.85s ease forwards;}
+@keyframes sFly{0%{opacity:1;transform:translate(0,0) scale(1);}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0);}}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#2a3830;border-radius:3px;}
+.empty-state{text-align:center;padding:44px;color:var(--text2);font-size:0.88rem;font-style:italic;}
+
+/* ── FLOATING ACTION BUTTON ── */
+.fab{
+  position:fixed;bottom:28px;right:28px;z-index:150;
+  display:flex;align-items:center;gap:10px;
+  padding:14px 22px;border-radius:50px;
+  background:var(--green);border:none;
+  color:#0e1210;font-weight:700;font-size:0.9rem;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+  box-shadow:0 4px 24px #4caf5050,0 2px 8px #00000060;
+  transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.fab:hover{
+  background:var(--green2);
+  transform:translateY(-4px) scale(1.04);
+  box-shadow:0 8px 32px #4caf5070,0 4px 12px #00000060;
+}
+.fab:active{transform:scale(0.96);}
+.fab-icon{font-size:1.3rem;line-height:1;}
+.fab-label{font-size:0.85rem;}
+/* pulse ring on FAB */
+.fab::after{
+  content:'';position:absolute;inset:-4px;border-radius:54px;
+  border:2px solid var(--green);opacity:0;
+  animation:fabRing 3s ease-in-out infinite;
+}
+@keyframes fabRing{0%,100%{opacity:0;transform:scale(1);}50%{opacity:0.3;transform:scale(1.06);}}
+</style>
+</head>
+<body>
+
+<!-- ══ LIVE WALLPAPER ══ -->
+<canvas id="wallpaper"></canvas>
+
+<div class="app">
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-logo"><div class="logo-dot"></div>&nbsp;Spark<span>Rise</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showPage('home',this)">Home</button>
+    <button class="nav-link" onclick="showPage('activities',this)">Activities</button>
+    <button class="nav-link" onclick="showPage('calendar',this)">Calendar</button>
+    <button class="nav-link" onclick="showPage('progress',this)">Progress</button>
+    <button class="nav-link" onclick="showPage('reports',this)">Reports</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-smart" onclick="openSmartModal()">✦ Smart Task</button>
+   
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="hero-greeting">Welcome back, Mahalakshmi ✦</div>
+    <div class="hero-title">Ready to grow today?</div>
+    <div class="hero-quote" id="daily-quote">"Small steps every day lead to big results."</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Level</div><div class="stat-value green" id="home-level">Spark</div></div>
+      <div class="stat-card"><div class="stat-label">Streak</div><div class="stat-value gold" id="home-streak">🔥 3</div></div>
+      <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-value" id="home-xp">50</div></div>
+      <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value" id="home-done">1 / 6</div></div>
+    </div>
+  </div>
+
+  <div class="home-grid">
+    <div class="plant-card">
+      <div class="plant-svg-wrap" id="plant-svg-wrap"></div>
+      <div class="plant-stage-name" id="plant-name">Small Sprout</div>
+      <div class="plant-stage-sub" id="plant-sub">Stage 1 of 6</div>
+      <div class="plant-cycle-dots" id="plant-dots"></div>
+    </div>
+    <div class="progress-card">
+      <h3>Your Progress</h3>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>Tasks Completed</span><span id="prog-txt">1 of 6</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="prog-bar" style="width:0%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>XP Progress</span><span id="xp-txt">50 / 100 XP</span></div>
+        <div class="xp-bg"><div class="xp-fill" id="xp-bar" style="width:0%"></div></div>
+      </div>
+      <div class="level-badge" id="lev-badge">⚡ Level 1 — Spark</div>
+    </div>
+  </div>
+
+  <!-- TASK REMINDERS -->
+  <div class="section-card">
+    <h3>📋 Task Reminders</h3>
+    <div id="reminders-list"></div>
+  </div>
+
+  <!-- UPCOMING EVENTS -->
+  <div class="section-card">
+    <h3>📅 Upcoming Events</h3>
+    <div id="upcoming-events-list"></div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="section-card">
+    <h3>🏅 Badges</h3>
+    <div class="badges-row" id="badges-row"></div>
+  </div>
+</div>
+
+<!-- ══ ACTIVITIES ══ -->
+<div class="page" id="page-activities">
+  <div class="page-title">My Activities</div>
+  <!-- Smart Task Banner -->
+  <div style="background:linear-gradient(135deg,#f4c54215,#4caf5015);border:1px solid #f4c54230;border-radius:14px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <div>
+      <div style="font-size:0.82rem;font-weight:700;color:var(--gold);margin-bottom:2px;">✦ Smart Task Maker</div>
+      <div style="font-size:0.78rem;color:var(--text2);">Describe your goal — AI breaks it into actionable tasks with XP & due dates</div>
+    </div>
+    <button onclick="openSmartModal()" style="padding:8px 18px;border-radius:30px;background:var(--gold);color:#0e1210;font-weight:700;font-size:0.8rem;border:none;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:var(--tr);">Try it →</button>
+  </div>
+  <div class="filters-row">
+    <button class="filter-btn active" onclick="filterAct('all',this)">All</button>
+    <button class="filter-btn" onclick="filterAct('pending',this)">Pending</button>
+    <button class="filter-btn" onclick="filterAct('completed',this)">Completed</button>
+    <select class="sort-sel" onchange="sortAct(this.value)">
+      <option value="default">Default</option>
+      <option value="dueDate">By Due Date</option>
+      <option value="priority">By Priority</option>
+    </select>
+  </div>
+  <div class="activity-list" id="activity-list"></div>
+</div>
+
+<!-- ══ CALENDAR ══ -->
+<div class="page" id="page-calendar">
+  <div class="page-title">Calendar</div>
+  <div class="cal-card">
+    <div class="cal-header">
+      <div class="cal-month-title" id="cal-month">March 2026</div>
+      <div class="cal-nav-btns">
+        <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
+        <button class="cal-btn" onclick="changeMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-tasks-section">
+      <h4 id="cal-label">Select a date to view tasks</h4>
+      <div id="cal-task-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REPORTS ══ -->
+<div class="page" id="page-reports">
+  <div class="page-title">Reports</div>
+
+  <!-- stat cards row -->
+  <div class="reports-grid">
+    <div class="rep-stat"><div class="rep-icon">✅</div><div class="rep-val" id="rep-done">0</div><div class="rep-label">Tasks Completed</div></div>
+    <div class="rep-stat"><div class="rep-icon">🔥</div><div class="rep-val" id="rep-streak" style="color:var(--gold)">0</div><div class="rep-label">Day Streak</div></div>
+    <div class="rep-stat"><div class="rep-icon">⭐</div><div class="rep-val" id="rep-xp">0</div><div class="rep-label">Total XP Earned</div></div>
+    <div class="rep-stat"><div class="rep-icon">🌱</div><div class="rep-val" id="rep-lev" style="color:var(--green);font-size:1.3rem">Spark</div><div class="rep-label">Current Level</div></div>
+  </div>
+
+  <!-- weekly bar chart -->
+  <div class="weekly-card" style="margin-bottom:18px">
+    <h3>📊 Weekly Activity</h3>
+    <div class="weekly-bars" id="weekly-bars"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #2a383850;">
+      <span style="font-size:0.75rem;color:var(--text3)">Most productive: <span style="color:var(--green);font-weight:600">Thursday</span></span>
+      <span style="font-size:0.75rem;color:var(--text3)">Total this week: <span style="color:var(--text);font-weight:600">13 tasks</span></span>
+    </div>
+  </div>
+
+  <!-- category breakdown -->
+  <div class="weekly-card" style="margin-bottom:18px">
+    <h3>📂 Category Breakdown</h3>
+    <div id="category-bars" style="display:flex;flex-direction:column;gap:10px;margin-top:4px;"></div>
+  </div>
+
+  <!-- priority summary -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+    <div class="rep-stat" style="border-left:3px solid #ef9a9a;">
+      <div class="rep-icon">🔴</div>
+      <div class="rep-val" id="rep-high" style="color:#ef9a9a;font-size:1.6rem">0</div>
+      <div class="rep-label">High Priority Done</div>
+    </div>
+    <div class="rep-stat" style="border-left:3px solid #ffe082;">
+      <div class="rep-icon">🟡</div>
+      <div class="rep-val" id="rep-med" style="color:#ffe082;font-size:1.6rem">0</div>
+      <div class="rep-label">Medium Priority Done</div>
+    </div>
+    <div class="rep-stat" style="border-left:3px solid #a5d6a7;">
+      <div class="rep-icon">🟢</div>
+      <div class="rep-val" id="rep-low" style="color:#a5d6a7;font-size:1.6rem">0</div>
+      <div class="rep-label">Low Priority Done</div>
+    </div>
+  </div>
+
+  <!-- motivational insight -->
+  <div class="section-card" style="border-left:3px solid var(--gold);">
+    <h3 style="color:var(--gold)">💡 Insight</h3>
+    <p id="rep-insight" style="font-size:0.875rem;color:var(--text2);line-height:1.7;margin-top:4px;">Loading your personalised insight...</p>
+  </div>
+</div>
+
+<!-- ══ PROGRESS ══ -->
+<div class="page" id="page-progress">
+  <div class="page-title">Progress</div>
+
+  <!-- Plant + donut row -->
+  <div class="prog-grid" style="margin-bottom:18px">
+    <div class="plant-card" style="min-height:280px">
+      <div class="plant-svg-wrap" style="width:130px;height:130px" id="prog-plant-svg"></div>
+      <div class="plant-stage-name" id="prog-pname">Small Sprout</div>
+      <div class="plant-stage-sub" id="prog-psub">Stage 1 of 6</div>
+      <div class="plant-cycle-dots" id="prog-plant-dots"></div>
+    </div>
+    <div class="progress-card">
+      <h3>Task Completion</h3>
+      <div style="text-align:center;margin:16px 0">
+        <div class="donut-wrap">
+          <svg viewBox="0 0 100 100">
+            <circle class="donut-bg-c" cx="50" cy="50" r="41"/>
+            <circle class="donut-fill-c" id="donut-fill" cx="50" cy="50" r="41" stroke-dasharray="257.6" stroke-dashoffset="257.6"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-pct" id="donut-pct">0%</div>
+            <div class="donut-sub-txt">complete</div>
+          </div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text2)" id="prog-summary">0 out of 6 completed</div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>XP to next level</span><span id="prog-xp-txt">0/100</span></div>
+        <div class="xp-bg"><div class="xp-fill" id="prog-xp-bar" style="width:0%"></div></div>
+      </div>
+      <div style="margin-top:14px"><div class="level-badge" id="prog-lev-badge">⚡ Level 1 — Spark</div></div>
+    </div>
+  </div>
+
+  <!-- Level journey path -->
+  <div class="weekly-card" style="margin-bottom:18px">
+    <h3>🗺️ Level Journey</h3>
+    <div id="level-path" style="display:flex;align-items:center;gap:0;margin-top:16px;overflow-x:auto;padding-bottom:6px;"></div>
+  </div>
+
+  <!-- XP breakdown -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+    <div class="rep-stat">
+      <div class="rep-icon">⚡</div>
+      <div class="rep-val" id="prog-total-xp" style="font-size:1.6rem">0</div>
+      <div class="rep-label">Total XP Earned</div>
+    </div>
+    <div class="rep-stat">
+      <div class="rep-icon">📅</div>
+      <div class="rep-val" id="prog-pending" style="font-size:1.6rem;color:var(--gold)">0</div>
+      <div class="rep-label">Tasks Remaining</div>
+    </div>
+    <div class="rep-stat">
+      <div class="rep-icon">🔥</div>
+      <div class="rep-val" id="prog-streak-val" style="font-size:1.6rem;color:#ff7043">0</div>
+      <div class="rep-label">Current Streak</div>
+    </div>
+  </div>
+
+  <!-- Achievement badges -->
+  <div class="section-card">
+    <h3>🏅 Achievement Badges</h3>
+    <div class="badges-row" id="prog-badges" style="margin-top:4px"></div>
+  </div>
+</div>
+
+</div><!-- end .app -->
+
+<!-- ══ FOOTER ══ -->
+<footer style="
+  position:relative;z-index:1;
+  background:#0e121099;backdrop-filter:blur(16px);
+  border-top:1px solid #2a383850;
+  padding:28px 40px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:ldp 2.5s ease-in-out infinite;"></div>
+    <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);">Spark<span style="color:var(--green)">Rise</span></span>
+    <span style="font-size:0.75rem;color:var(--text3);margin-left:4px;">Learn. Track. Grow.</span>
+  </div>
+  <div style="font-size:0.75rem;color:var(--text3);text-align:center;letter-spacing:1px;">
+    Track your growth. One task at a time. 🌱
+  </div>
+  <div style="display:flex;gap:16px;align-items:center;">
+    
+  </div>
+</footer>
+
+<!-- ══ FLOATING ACTION BUTTON ══ -->
+<button class="fab" onclick="openAddModal()" title="Add Activity">
+  <span class="fab-icon">＋</span>
+  <span class="fab-label">Add Activity</span>
+</button>
+
+<!-- ══ ADD / EDIT MODAL ══ -->
+<div class="modal-overlay" id="add-modal" onclick="closeAddOut(event)">
+  <div class="modal">
+    <h2 id="add-modal-title">Add New Activity</h2>
+    <input type="hidden" id="edit-id" value=""/>
+    <div class="form-group"><label class="form-label">Activity Name</label><input class="form-input" id="f-name" placeholder="Enter activity name..."/></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="f-desc" placeholder="Short description..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="f-cat"><option value="academic">Academic</option><option value="personal">Personal</option><option value="health">Health</option><option value="project">Project</option></select></div>
+      <div class="form-group"><label class="form-label">Priority</label><select class="form-select" id="f-pri"><option value="high">High (+30 XP)</option><option value="medium">Medium (+20 XP)</option><option value="low">Low (+10 XP)</option></select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Due Date</label><input class="form-input" type="date" id="f-due"/></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-save" onclick="saveActivity()">Save Activity</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SMART TASK MODAL ══ -->
+<div class="modal-overlay" id="smart-modal" onclick="closeSmartOut(event)">
+  <div class="modal smart-modal">
+    <h2>✦ Smart Task Maker</h2>
+    <div class="form-group">
+      <label class="form-label">What do you want to achieve?</label>
+      <input class="form-input" id="smart-input" placeholder="e.g. Prepare for my JavaScript exam next week..."/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="smart-cat">
+          <option value="academic">Academic</option>
+          <option value="personal">Personal</option>
+          <option value="health">Health</option>
+          <option value="project">Project</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Timeframe</label>
+        <select class="form-select" id="smart-days">
+          <option value="3">3 days</option>
+          <option value="7" selected>1 week</option>
+          <option value="14">2 weeks</option>
+          <option value="30">1 month</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:0;margin-bottom:0">
+      <button class="btn-cancel" onclick="closeSmartModal()">Cancel</button>
+      <button class="btn-save" onclick="runSmartTask()" id="smart-gen-btn">✦ Generate Tasks</button>
+    </div>
+    <div class="smart-result" id="smart-result">
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:10px">Click a task to add it instantly ↓</div>
+      <div id="smart-task-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOCUS MODE ══ -->
+<div class="focus-overlay" id="focus-overlay">
+  <div class="focus-bubble">
+    <div class="focus-icon">🔮</div>
+    <div class="focus-task-name" id="ftask-name">Task Name</div>
+    <div class="focus-desc-txt" id="ftask-desc">Description</div>
+    <div class="focus-timer" id="focus-timer">25:00</div>
+    <div class="focus-acts">
+      <button class="btn-fs" id="focus-start-btn" onclick="toggleTimer()">Start</button>
+      <button class="btn-fd" onclick="focusDone()">Mark Done ✅</button>
+    </div>
+  </div>
+  <button class="btn-fb" onclick="closeFocus()">← Back</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  LIVE WALLPAPER — exact from approved sample
+//  + mouse attraction + denser particles
+// ══════════════════════════════════════════════════
+const canvas = document.getElementById('wallpaper');
+const ctx    = canvas.getContext('2d');
+let W, H, particles = [];
+let mouseX = -9999, mouseY = -9999;
+
+window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+window.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(initial = false) {
+    this.x         = Math.random() * W;
+    this.y         = initial ? Math.random() * H : H + 10;
+    this.r         = 0.6 + Math.random() * 2;
+    this.vy        = -(0.15 + Math.random() * 0.35);
+    this.vx        = (Math.random() - 0.5) * 0.15;
+    this.swayAmp   = 0.3 + Math.random() * 0.5;
+    this.swaySpeed = 0.003 + Math.random() * 0.005;
+    this.swayOff   = Math.random() * Math.PI * 2;
+    this.alpha     = 0;
+    this.maxAlpha  = 0.15 + Math.random() * 0.35; // brighter than sample
+    this.life      = 0;
+    this.lifeMax   = 300 + Math.random() * 400;
+    const greens   = ['76,175,80','102,187,106','56,142,60','165,214,167','200,230,201'];
+    this.color     = greens[Math.floor(Math.random() * greens.length)];
+  }
+  update() {
+    this.life++;
+    const t = this.life / this.lifeMax;
+    if      (t < 0.15) this.alpha = (t / 0.15) * this.maxAlpha;
+    else if (t > 0.80) this.alpha = ((1 - t) / 0.2) * this.maxAlpha;
+    else               this.alpha = this.maxAlpha;
+
+    // mouse attraction
+    const dx = mouseX - this.x, dy = mouseY - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 180 && dist > 0) {
+      const f = (180 - dist) / 180 * 0.018;
+      this.vx += (dx / dist) * f;
+      this.vy += (dy / dist) * f;
+    }
+    this.vx *= 0.96;
+    this.vy  = this.vy * 0.97 - 0.012;
+    this.x  += this.vx + Math.sin(this.life * this.swaySpeed + this.swayOff) * this.swayAmp * 0.04;
+    this.y  += this.vy;
+    if (this.life >= this.lifeMax || this.y < -10) this.reset();
+  }
+  draw() {
+    const glow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 4);
+    glow.addColorStop(0,   `rgba(${this.color}, ${this.alpha})`);
+    glow.addColorStop(0.4, `rgba(${this.color}, ${this.alpha * 0.4})`);
+    glow.addColorStop(1,   `rgba(${this.color}, 0)`);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r * 4, 0, Math.PI * 2);
+    ctx.fillStyle = glow; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color}, ${Math.min(1, this.alpha * 3)})`;
+    ctx.fill();
+  }
+}
+
+function spawnAll() {
+  particles = [];
+  // denser: /8000 instead of /14000
+  const count = Math.floor((W * H) / 8000);
+  for (let i = 0; i < count; i++) particles.push(new Particle());
+}
+
+let vigCanvas;
+function buildVignette() {
+  vigCanvas = document.createElement('canvas');
+  vigCanvas.width = W; vigCanvas.height = H;
+  const vc   = vigCanvas.getContext('2d');
+  const grad = vc.createRadialGradient(W/2, H/2, H*0.2, W/2, H/2, H*0.85);
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.55)');
+  vc.fillStyle = grad; vc.fillRect(0, 0, W, H);
+}
+
+function wallLoop() {
+  ctx.fillStyle = 'rgba(14, 18, 16, 0.18)';
+  ctx.fillRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  if (vigCanvas) ctx.drawImage(vigCanvas, 0, 0);
+  requestAnimationFrame(wallLoop);
+}
+
+window.addEventListener('resize', () => { resize(); buildVignette(); spawnAll(); });
+resize(); buildVignette(); spawnAll(); wallLoop();
+
+// ══════════════════════════════
+//  CARD TILT
+// ══════════════════════════════
+document.addEventListener('mousemove', e => {
+  document.querySelectorAll('.stat-card,.plant-card,.progress-card,.rep-stat,.section-card,.cal-card,.weekly-card').forEach(card => {
+    const r  = card.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dx = (e.clientX - cx)/(r.width/2), dy = (e.clientY - cy)/(r.height/2);
+    if (Math.sqrt(dx*dx+dy*dy) < 1.4) {
+      card.style.transform = `perspective(1000px) rotateY(${dx*4}deg) rotateX(${-dy*4}deg) translateZ(5px)`;
+      card.style.transition = 'transform 0.1s ease';
+    } else {
+      card.style.transform = ''; card.style.transition = 'transform 0.4s ease';
+    }
+  });
+});
+
+// ══════════════════════════════
+//  COUNT UP
+// ══════════════════════════════
+function countUp(el, target, dur=900, suffix='') {
+  const start = performance.now();
+  const step = now => {
+    const t = Math.min((now - start)/dur, 1);
+    el.textContent = Math.round(target * (1 - Math.pow(1-t, 3))) + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ══════════════════════════════
+//  PLANT GROWTH CYCLE SVGs
+//  Stages: seed→sprout→sapling→branch→bud→flower → RESETS
+// ══════════════════════════════
+const PLANT_STAGES = [
+  {
+    name: 'Tiny Seed', sub: 'Stage 1 of 6',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="72" rx="10" ry="7" fill="#4caf5040" stroke="#4caf50" stroke-width="1.5"/>
+      <ellipse cx="50" cy="70" rx="6" ry="5" fill="#2e7d32"/>
+      <line x1="50" y1="65" x2="50" y2="58" stroke="#66bb6a" stroke-width="2" stroke-linecap="round"/>
+    </svg>`
+  },
+  {
+    name: 'Small Sprout', sub: 'Stage 2 of 6',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="80" x2="50" y2="40" stroke="#66bb6a" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="38" cy="54" rx="12" ry="8" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5" transform="rotate(-20 38 54)"/>
+      <ellipse cx="62" cy="48" rx="12" ry="8" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5" transform="rotate(20 62 48)"/>
+      <ellipse cx="50" cy="42" rx="8" ry="5" fill="#66bb6a90" stroke="#66bb6a" stroke-width="1.2"/>
+    </svg>`
+  },
+  {
+    name: 'Growing Sapling', sub: 'Stage 3 of 6',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="85" x2="50" y2="25" stroke="#4caf50" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="34" cy="62" rx="16" ry="10" fill="#4caf5060" stroke="#4caf50" stroke-width="1.5" transform="rotate(-25 34 62)"/>
+      <ellipse cx="66" cy="55" rx="16" ry="10" fill="#4caf5060" stroke="#4caf50" stroke-width="1.5" transform="rotate(25 66 55)"/>
+      <ellipse cx="34" cy="44" rx="13" ry="9" fill="#66bb6a60" stroke="#66bb6a" stroke-width="1.5" transform="rotate(-15 34 44)"/>
+      <ellipse cx="66" cy="38" rx="13" ry="9" fill="#66bb6a60" stroke="#66bb6a" stroke-width="1.5" transform="rotate(15 66 38)"/>
+      <ellipse cx="50" cy="28" rx="10" ry="7" fill="#a5d6a770" stroke="#a5d6a7" stroke-width="1.2"/>
+    </svg>`
+  },
+  {
+    name: 'Strong Branch', sub: 'Stage 4 of 6',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="90" x2="50" y2="20" stroke="#2e7d32" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="70" x2="28" y2="55" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="60" x2="72" y2="45" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="48" x2="30" y2="36" stroke="#43a047" stroke-width="2" stroke-linecap="round"/>
+      <line x1="50" y1="40" x2="70" y2="30" stroke="#43a047" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="24" cy="52" rx="13" ry="9" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5"/>
+      <ellipse cx="76" cy="42" rx="13" ry="9" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5"/>
+      <ellipse cx="27" cy="32" rx="10" ry="7" fill="#66bb6a70" stroke="#66bb6a" stroke-width="1.2"/>
+      <ellipse cx="73" cy="26" rx="10" ry="7" fill="#66bb6a70" stroke="#66bb6a" stroke-width="1.2"/>
+      <ellipse cx="50" cy="20" rx="9" ry="6" fill="#a5d6a780" stroke="#a5d6a7" stroke-width="1.2"/>
+    </svg>`
+  },
+  {
+    name: 'Bud Forming', sub: 'Stage 5 of 6',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="90" x2="50" y2="18" stroke="#2e7d32" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="72" x2="26" y2="56" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="60" x2="74" y2="44" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="22" cy="53" rx="13" ry="9" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5"/>
+      <ellipse cx="78" cy="41" rx="13" ry="9" fill="#4caf5070" stroke="#4caf50" stroke-width="1.5"/>
+      <!-- bud top -->
+      <ellipse cx="50" cy="14" rx="8" ry="11" fill="#f48fb180" stroke="#f48fb1" stroke-width="1.5"/>
+      <ellipse cx="50" cy="12" rx="5" ry="8" fill="#f8bbd0"/>
+    </svg>`
+  },
+  {
+    name: 'Full Bloom 🌸', sub: 'Stage 6 — Resetting soon',
+    svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="50" y1="92" x2="50" y2="42" stroke="#2e7d32" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="75" x2="28" y2="62" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="50" y1="65" x2="72" y2="52" stroke="#388e3c" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="24" cy="59" rx="12" ry="8" fill="#4caf5070" stroke="#4caf50" stroke-width="1.2"/>
+      <ellipse cx="76" cy="49" rx="12" ry="8" fill="#4caf5070" stroke="#4caf50" stroke-width="1.2"/>
+      <!-- flower petals -->
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f48fb1aa" stroke="#f48fb1" stroke-width="1.2"/>
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f48fb1aa" stroke="#f48fb1" stroke-width="1.2" transform="rotate(60 50 32)"/>
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f48fb1aa" stroke="#f48fb1" stroke-width="1.2" transform="rotate(120 50 32)"/>
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f8bbd0aa" stroke="#f8bbd0" stroke-width="1.2" transform="rotate(30 50 32)"/>
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f8bbd0aa" stroke="#f8bbd0" stroke-width="1.2" transform="rotate(90 50 32)"/>
+      <ellipse cx="50" cy="24" rx="7" ry="12" fill="#f8bbd0aa" stroke="#f8bbd0" stroke-width="1.2" transform="rotate(150 50 32)"/>
+      <circle cx="50" cy="32" r="7" fill="#f4c542" stroke="#ffb300" stroke-width="1.5"/>
+      <circle cx="50" cy="32" r="4" fill="#ffb300"/>
+    </svg>`
+  }
+];
+
+function getPlantStage(xp) {
+  // cycle through 6 stages every 100 XP, resets after full bloom
+  const stageIndex = Math.floor(xp / 100) % 6;
+  return stageIndex;
+}
+
+function renderPlantSVG(containerId, stageIdx) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = PLANT_STAGES[stageIdx].svg;
+}
+
+function renderPlantDots(dotContainerId, stageIdx) {
+  const el = document.getElementById(dotContainerId);
+  if (!el) return;
+  el.innerHTML = PLANT_STAGES.map((_, i) =>
+    `<div class="plant-cycle-dot ${i === stageIdx ? 'active' : ''}"></div>`
+  ).join('');
+}
+
+// ══════════════════════════════
+//  APP DATA & STATE
+// ══════════════════════════════
+const QUOTES = [
+  "Small steps every day lead to big results.",
+  "Consistency is the mother of mastery.",
+  "Progress, not perfection.",
+  "Every task you finish is a spark of growth.",
+  "Your future self is proud of you today.",
+  "Growth happens one completed task at a time.",
+  "Stay consistent. Stay rising."
+];
+
+const BADGES_DEF = [
+  { id:'first',    icon:'🌱', name:'First Step', check: s => s.done >= 1 },
+  { id:'streak',   icon:'🔥', name:'Consistent', check: s => s.streak >= 3 },
+  { id:'bloom',    icon:'🌸', name:'Bloomed',    check: s => s.done > 0 && s.done === s.total },
+  { id:'ignite',   icon:'⚡', name:'Ignited',    check: s => s.xp >= 100 },
+  { id:'shine',    icon:'🏆', name:'Shine',      check: s => s.xp >= 400 }
+];
+
+const LEVELS = [
+  {name:'Spark',xp:0},{name:'Ignite',xp:100},{name:'Glow',xp:200},{name:'Rise',xp:300},{name:'Shine',xp:400}
+];
+const XP_MAP = { high:30, medium:20, low:10 };
+
+const UPCOMING_EVENTS = [
+  { title:'HTML & CSS Internal Assessment', date:'2026-03-10', type:'academic', note:'Lab test' },
+  { title:'JavaScript Project Submission',  date:'2026-03-14', type:'project',  note:'Upload to portal' },
+  { title:'Database Exam',                  date:'2026-03-20', type:'academic', note:'Unit 1–3 syllabus' },
+  { title:'Hackathon Level-2 Deadline',     date:'2026-03-25', type:'project',  note:'Full project due' },
+  { title:'Health & Wellness Workshop',     date:'2026-03-12', type:'health',   note:'College event' },
+];
+
+let state = {
+  tasks: [], xp: 50, streak: 3,
+  calYear: 2026, calMonth: 2,
+  selDate: null, filter: 'all', sort: 'default'
+};
+
+const SAMPLE = [
+  {id:1,title:'Complete HTML Assignment',description:'Build a semantic HTML page for web design module',category:'academic',priority:'high',completed:true,dueDate:'2026-03-05',xp:30},
+  {id:2,title:'CSS Styling Practice',description:'Apply Flexbox and Grid layouts to the assignment template',category:'academic',priority:'high',completed:false,dueDate:'2026-03-08',xp:30},
+  {id:3,title:'JavaScript Basics Quiz',description:'Prepare for the JS fundamentals online quiz',category:'academic',priority:'medium',completed:false,dueDate:'2026-03-10',xp:20},
+  {id:4,title:'Morning Workout',description:'30 minute cardio and stretching routine',category:'health',priority:'low',completed:false,dueDate:'2026-03-07',xp:10},
+  {id:5,title:'SparkRise Proposal',description:'Complete the Level-1 hackathon submission document',category:'project',priority:'high',completed:false,dueDate:'2026-03-06',xp:30},
+  {id:6,title:'Read Chapter 5',description:'Database management systems textbook chapter 5',category:'academic',priority:'medium',completed:false,dueDate:'2026-03-12',xp:20}
+];
+
+function getStats() {
+  const done  = state.tasks.filter(t => t.completed).length;
+  const total = state.tasks.length;
+  const pct   = total > 0 ? Math.round((done/total)*100) : 0;
+  const xp    = state.xp;
+  const li    = LEVELS.reduce((a,l,i) => xp >= l.xp ? i : a, 0);
+  const lev   = LEVELS[li], next = LEVELS[li+1];
+  const xpIn  = xp - lev.xp, xpNd = next ? next.xp - lev.xp : 100;
+  const xpPct = Math.min(100, Math.round((xpIn/xpNd)*100));
+  const plantIdx = getPlantStage(xp);
+  const earned = BADGES_DEF.filter(b => b.check({ done, total, xp, streak: state.streak }));
+  return { done, total, pct, xp, lev, next, xpIn, xpNd, xpPct, plantIdx, earned, li };
+}
+
+function init() {
+  state.tasks = JSON.parse(JSON.stringify(SAMPLE));
+  document.getElementById('daily-quote').textContent = `"${QUOTES[Math.floor(Math.random()*QUOTES.length)]}"`;
+  renderAll();
+}
+
+function renderAll() {
+  const s = getStats();
+  renderHome(s); renderActivities(); renderCalendar(); renderReports(s); renderProgress(s);
+}
+
+// ── HOME ──
+function renderHome(s) {
+  document.getElementById('home-level').textContent = s.lev.name;
+  document.getElementById('home-streak').textContent = `🔥 ${state.streak}`;
+  document.getElementById('home-xp').textContent = s.xp;
+  document.getElementById('home-done').textContent = `${s.done} / ${s.total}`;
+
+  // Plant
+  renderPlantSVG('plant-svg-wrap', s.plantIdx);
+  renderPlantDots('plant-dots', s.plantIdx);
+  document.getElementById('plant-name').textContent = PLANT_STAGES[s.plantIdx].name;
+  document.getElementById('plant-sub').textContent  = PLANT_STAGES[s.plantIdx].sub;
+
+  // Bars
+  setTimeout(() => { document.getElementById('prog-bar').style.width = s.pct + '%'; }, 100);
+  setTimeout(() => { document.getElementById('xp-bar').style.width   = s.xpPct + '%'; }, 150);
+  document.getElementById('prog-txt').textContent = `${s.done} of ${s.total}`;
+  document.getElementById('xp-txt').textContent   = `${s.xpIn} / ${s.xpNd} XP`;
+  document.getElementById('lev-badge').textContent = `⚡ Level ${s.li+1} — ${s.lev.name}`;
+
+  // Upcoming Events
+  const today = new Date(); today.setHours(0,0,0,0);
+  const evEl  = document.getElementById('upcoming-events-list');
+  const upcoming = UPCOMING_EVENTS
+    .map(ev => { const d = new Date(ev.date); d.setHours(0,0,0,0); return {...ev, diff: Math.ceil((d-today)/(864e5))}; })
+    .filter(ev => ev.diff >= -1)
+    .sort((a,b) => a.diff - b.diff)
+    .slice(0, 5);
+
+  if (!upcoming.length) {
+    evEl.innerHTML = `<div class="calm-msg">🌿 No upcoming events.</div>`;
+  } else {
+    evEl.innerHTML = upcoming.map(ev => {
+      const d   = new Date(ev.date);
+      const day = d.getDate();
+      const mon = d.toLocaleString('en',{month:'short'});
+      const cls = ev.diff < 0 ? 'overdue' : ev.diff <= 2 ? 'soon' : 'today';
+      const lbl = ev.diff < 0 ? 'Overdue' : ev.diff === 0 ? 'Today!' : ev.diff === 1 ? 'Tomorrow' : `In ${ev.diff} days`;
+      return `<div class="event-item">
+        <div class="event-date-box"><div class="event-date-day">${day}</div><div class="event-date-mon">${mon}</div></div>
+        <div class="event-info">
+          <div class="event-title">${ev.title}</div>
+          <div class="event-meta">${ev.note}</div>
+        </div>
+        <span class="event-badge ${cls}">${lbl}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Reminders — all pending tasks
+  const pending = state.tasks.filter(t => !t.completed)
+    .sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+  const rl = document.getElementById('reminders-list');
+  if (!pending.length) {
+    rl.innerHTML = `<div class="calm-msg">🌿 All tasks done — great work!</div>`;
+  } else {
+    rl.innerHTML = pending.map(t => {
+      const d    = new Date(t.dueDate); d.setHours(0,0,0,0);
+      const diff = Math.ceil((d - today) / 864e5);
+      const lbl  = diff < 0 ? 'Overdue!' : diff === 0 ? 'Due today!' : diff === 1 ? 'Due tomorrow' : `Due in ${diff} days`;
+      return `<div class="reminder-item">
+        <span class="reminder-name">${t.title}</span>
+        <span class="reminder-due ${diff<0?'overdue':''}">${lbl}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Badges
+  document.getElementById('badges-row').innerHTML = BADGES_DEF.map(b => {
+    const e = s.earned.find(x => x.id === b.id);
+    return `<div class="badge-chip ${e?'earned':''}">${b.icon} ${b.name}</div>`;
+  }).join('');
+}
+
+// ── ACTIVITIES ──
+function renderActivities() {
+  let tasks = [...state.tasks];
+  if (state.filter === 'pending')   tasks = tasks.filter(t => !t.completed);
+  if (state.filter === 'completed') tasks = tasks.filter(t => t.completed);
+  if (state.sort === 'dueDate')  tasks.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+  if (state.sort === 'priority') { const o={high:0,medium:1,low:2}; tasks.sort((a,b)=>o[a.priority]-o[b.priority]); }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const list  = document.getElementById('activity-list');
+  if (!tasks.length) { list.innerHTML=`<div class="empty-state">🌿 No activities here yet.</div>`; return; }
+
+  list.innerHTML = tasks.map(t => {
+    const d      = new Date(t.dueDate); d.setHours(0,0,0,0);
+    const over   = !t.completed && d < today;
+    const diff   = Math.ceil((d - today)/864e5);
+    const dueStr = over ? '⚠️ Overdue' : diff===0 ? '📅 Due today' : `📅 ${t.dueDate}`;
+    return `<div class="activity-card ${t.completed?'completed':''} ${over?'overdue':''}" id="card-${t.id}">
+      <div class="activity-top">
+        <div class="activity-name">${t.title}</div>
+        <div class="xp-tag">+${t.xp} XP</div>
+      </div>
+      <div class="activity-desc">${t.description}</div>
+      <div class="activity-meta">
+        <span class="tag ${t.category}">${t.category}</span>
+        <span class="tag ${t.priority}">${t.priority}</span>
+        <span class="tag ${t.completed?'done-tag':over?'over-tag':'pending'}">${t.completed?'✅ Completed':over?'Overdue':'⏳ Pending'}</span>
+        <span style="font-size:0.73rem;color:var(--text3)">${dueStr}</span>
+      </div>
+      <div class="activity-actions">
+        ${t.completed
+          ? `<button class="btn-complete done" disabled>✅ Completed</button>`
+          : `<button class="btn-complete" onclick="completeTask(${t.id})">Mark as Complete</button>
+             <button class="btn-icon" onclick="openFocus(${t.id})" title="Focus Mode">🔮</button>`}
+        <button class="btn-icon" onclick="openEditModal(${t.id})" title="Edit">✏️</button>
+        <button class="btn-icon del" onclick="deleteTask(${t.id})" title="Delete">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterAct(m, btn) {
+  state.filter = m;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); renderActivities();
+}
+function sortAct(v) { state.sort = v; renderActivities(); }
+
+function completeTask(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t || t.completed) return;
+  t.completed = true; state.xp += t.xp;
+  microWin();
+  // Plant bounce
+  const plantSVG = document.getElementById('plant-svg-wrap');
+  if (plantSVG) { plantSVG.style.transform='scale(1.3)'; setTimeout(()=>plantSVG.style.transform='scale(1)',400); }
+  showToast(`✨ +${t.xp} XP — "${t.title}" completed!`);
+  renderAll();
+}
+function deleteTask(id) { state.tasks = state.tasks.filter(t => t.id !== id); renderAll(); }
+
+// ── EDIT MODAL ──
+function openEditModal(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('add-modal-title').textContent = 'Edit Activity';
+  document.getElementById('edit-id').value   = id;
+  document.getElementById('f-name').value    = t.title;
+  document.getElementById('f-desc').value    = t.description;
+  document.getElementById('f-cat').value     = t.category;
+  document.getElementById('f-pri').value     = t.priority;
+  document.getElementById('f-due').value     = t.dueDate;
+  document.getElementById('add-modal').classList.add('open');
+}
+function openAddModal() {
+  document.getElementById('add-modal-title').textContent = 'Add New Activity';
+  document.getElementById('edit-id').value = '';
+  ['f-name','f-due'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-desc').value = '';
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
+function closeAddOut(e) { if (e.target === document.getElementById('add-modal')) closeAddModal(); }
+
+function saveActivity() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('⚠️ Please enter an activity name'); return; }
+  const pri  = document.getElementById('f-pri').value;
+  const editId = document.getElementById('edit-id').value;
+
+  if (editId) {
+    // UPDATE existing
+    const t = state.tasks.find(x => x.id === parseInt(editId));
+    if (t) {
+      t.title       = name;
+      t.description = document.getElementById('f-desc').value.trim() || 'No description';
+      t.category    = document.getElementById('f-cat').value;
+      t.priority    = pri;
+      t.dueDate     = document.getElementById('f-due').value || t.dueDate;
+      t.xp          = XP_MAP[pri];
+    }
+    showToast('✏️ Activity updated!');
+  } else {
+    // ADD new
+    state.tasks.unshift({
+      id: Date.now(), title: name,
+      description: document.getElementById('f-desc').value.trim() || 'No description',
+      category: document.getElementById('f-cat').value,
+      priority: pri, completed: false,
+      dueDate: document.getElementById('f-due').value || new Date().toISOString().split('T')[0],
+      xp: XP_MAP[pri]
+    });
+    showToast(`🌱 Added! Complete it to earn ${XP_MAP[pri]} XP.`);
+  }
+  closeAddModal(); renderAll();
+}
+
+// ── SMART TASK MODAL ──
+function openSmartModal()  { document.getElementById('smart-modal').classList.add('open'); }
+function closeSmartModal() { document.getElementById('smart-modal').classList.remove('open'); document.getElementById('smart-result').classList.remove('show'); }
+function closeSmartOut(e)  { if (e.target === document.getElementById('smart-modal')) closeSmartModal(); }
+
+function runSmartTask() {
+  const goal = document.getElementById('smart-input').value.trim();
+  if (!goal) { showToast('⚠️ Tell me your goal first!'); return; }
+  const cat  = document.getElementById('smart-cat').value;
+  const days = parseInt(document.getElementById('smart-days').value);
+
+  const resBox   = document.getElementById('smart-result');
+  const taskList = document.getElementById('smart-task-list');
+  resBox.classList.add('show');
+  taskList.innerHTML = `<div class="ai-thinking"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><br/>Generating smart tasks…</div>`;
+
+  // Smart task generation (rule-based AI)
+  setTimeout(() => {
+    const tasks = generateSmartTasks(goal, cat, days);
+    taskList.innerHTML = tasks.map((t,i) => `
+      <div class="smart-task-item" onclick="addSmartTask(${i})">
+        <div class="smart-task-name">${t.title}</div>
+        <div class="smart-task-meta">📅 Due in ${t.daysOut} days · ${t.priority} priority · +${XP_MAP[t.priority]} XP</div>
+      </div>`).join('');
+    window._smartTasks = tasks;
+    window._smartCat   = cat;
+  }, 1200);
+}
+
+function generateSmartTasks(goal, cat, days) {
+  const g = goal.toLowerCase();
+  let templates = [];
+
+  if (g.includes('exam') || g.includes('test') || g.includes('quiz')) {
+    templates = [
+      { title:`Review syllabus for: ${goal}`,          priority:'high',   daysOut: Math.max(1, Math.floor(days*0.1)) },
+      { title:`Make summary notes — ${goal}`,           priority:'high',   daysOut: Math.floor(days*0.3) },
+      { title:`Solve past year questions — ${goal}`,    priority:'high',   daysOut: Math.floor(days*0.5) },
+      { title:`Group study session — ${goal}`,          priority:'medium', daysOut: Math.floor(days*0.65) },
+      { title:`Mock test practice — ${goal}`,           priority:'high',   daysOut: Math.floor(days*0.8) },
+      { title:`Final revision — ${goal}`,               priority:'high',   daysOut: Math.max(1, days-1) },
+    ];
+  } else if (g.includes('project') || g.includes('assignment') || g.includes('submission')) {
+    templates = [
+      { title:`Plan & outline: ${goal}`,                priority:'high',   daysOut: Math.max(1,Math.floor(days*0.1)) },
+      { title:`Research & gather resources — ${goal}`,  priority:'medium', daysOut: Math.floor(days*0.25) },
+      { title:`First draft — ${goal}`,                  priority:'high',   daysOut: Math.floor(days*0.5) },
+      { title:`Review and revise — ${goal}`,            priority:'medium', daysOut: Math.floor(days*0.75) },
+      { title:`Final check & submit — ${goal}`,         priority:'high',   daysOut: Math.max(1, days-1) },
+    ];
+  } else if (g.includes('fitness') || g.includes('workout') || g.includes('health') || g.includes('exercise')) {
+    templates = [
+      { title:`Set fitness goals — ${goal}`,            priority:'medium', daysOut: 1 },
+      { title:`Day 1 workout session — ${goal}`,        priority:'medium', daysOut: 2 },
+      { title:`Mid-week check-in — ${goal}`,            priority:'low',    daysOut: Math.floor(days*0.5) },
+      { title:`Track progress — ${goal}`,               priority:'low',    daysOut: Math.floor(days*0.75) },
+      { title:`Final assessment — ${goal}`,             priority:'medium', daysOut: days },
+    ];
+  } else {
+    templates = [
+      { title:`Plan your approach: ${goal}`,            priority:'high',   daysOut: 1 },
+      { title:`Start working on: ${goal}`,              priority:'medium', daysOut: Math.floor(days*0.2) },
+      { title:`Midpoint check — ${goal}`,               priority:'medium', daysOut: Math.floor(days*0.5) },
+      { title:`Review progress — ${goal}`,              priority:'low',    daysOut: Math.floor(days*0.75) },
+      { title:`Complete: ${goal}`,                      priority:'high',   daysOut: days },
+    ];
+  }
+  return templates;
+}
+
+function addSmartTask(index) {
+  const t   = window._smartTasks[index];
+  const cat = window._smartCat || 'academic';
+  const due = new Date();
+  due.setDate(due.getDate() + t.daysOut);
+  const dueStr = due.toISOString().split('T')[0];
+  state.tasks.unshift({
+    id: Date.now() + index,
+    title: t.title, description: 'Generated by Smart Task Maker',
+    category: cat, priority: t.priority, completed: false,
+    dueDate: dueStr, xp: XP_MAP[t.priority]
+  });
+  renderAll();
+  showToast(`🌱 Smart task added — ${XP_MAP[t.priority]} XP waiting!`);
+  // visually mark it added
+  const items = document.querySelectorAll('.smart-task-item');
+  if (items[index]) { items[index].style.opacity='0.4'; items[index].style.pointerEvents='none'; items[index].innerHTML += ' <span style="color:var(--green)">✓ Added</span>'; }
+}
+
+// ── CALENDAR ──
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month').textContent = `${months[state.calMonth]} ${state.calYear}`;
+  const first = new Date(state.calYear, state.calMonth, 1).getDay();
+  const days  = new Date(state.calYear, state.calMonth+1, 0).getDate();
+  const today = new Date();
+  let html = ['Mo','Tu','We','Th','Fr','Sa','Su'].map(d=>`<div class="cal-dn">${d}</div>`).join('');
+  const off = (first+6)%7;
+  for (let i=0; i<off; i++) html += `<div class="cal-day empty"></div>`;
+  for (let d=1; d<=days; d++) {
+    const ds   = `${state.calYear}-${String(state.calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isT  = d===today.getDate() && state.calMonth===today.getMonth() && state.calYear===today.getFullYear();
+    const hasT = state.tasks.some(t=>t.dueDate===ds);
+    const isSel= state.selDate===ds;
+    html += `<div class="cal-day${isT?' today':''}${hasT?' has-task':''}${isSel?' selected':''}" onclick="selDate('${ds}')">${d}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+  if (state.selDate) {
+    const dt = state.tasks.filter(t=>t.dueDate===state.selDate);
+    document.getElementById('cal-label').textContent = `Tasks for ${state.selDate}`;
+    document.getElementById('cal-task-list').innerHTML = dt.length
+      ? dt.map(t=>`<div class="cal-task-item">${t.completed?'✅':'⏳'} <strong>${t.title}</strong> — ${t.category}</div>`).join('')
+      : `<div class="calm-msg">No tasks on this day.</div>`;
+  }
+}
+function selDate(d) { state.selDate=d; renderCalendar(); }
+function changeMonth(dir) {
+  state.calMonth += dir;
+  if (state.calMonth>11){state.calMonth=0;state.calYear++;}
+  if (state.calMonth<0){state.calMonth=11;state.calYear--;}
+  renderCalendar();
+}
+
+// ── REPORTS ──
+function renderReports(s) {
+  countUp(document.getElementById('rep-done'),   s.done);
+  countUp(document.getElementById('rep-streak'), state.streak);
+  countUp(document.getElementById('rep-xp'),     s.xp);
+  document.getElementById('rep-lev').textContent = s.lev.name;
+
+  // weekly bars
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], vals=[2,3,1,4,2,0,1], max=4;
+  document.getElementById('weekly-bars').innerHTML = days.map((d,i)=>`
+    <div class="wbar-wrap">
+      <div class="wbar-bg"><div class="wbar-fill" style="height:${Math.round((vals[i]/max)*100)}%"></div></div>
+      <div class="wbar-day">${d}</div>
+    </div>`).join('');
+
+  // priority breakdown
+  const highDone = state.tasks.filter(t=>t.completed && t.priority==='high').length;
+  const medDone  = state.tasks.filter(t=>t.completed && t.priority==='medium').length;
+  const lowDone  = state.tasks.filter(t=>t.completed && t.priority==='low').length;
+  countUp(document.getElementById('rep-high'), highDone);
+  countUp(document.getElementById('rep-med'),  medDone);
+  countUp(document.getElementById('rep-low'),  lowDone);
+
+  // category breakdown bars
+  const cats = ['academic','personal','health','project'];
+  const catColors = {academic:'#64b5f6',personal:'#80cbc4',health:'#ce93d8',project:'#ffb74d'};
+  const catIcons  = {academic:'📚',personal:'🌿',health:'💪',project:'🚀'};
+  const catEl = document.getElementById('category-bars');
+  catEl.innerHTML = cats.map(cat => {
+    const total = state.tasks.filter(t=>t.category===cat).length;
+    const done  = state.tasks.filter(t=>t.category===cat && t.completed).length;
+    const pct   = total > 0 ? Math.round((done/total)*100) : 0;
+    return `<div>
+      <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:5px;">
+        <span style="color:${catColors[cat]}">${catIcons[cat]} ${cat.charAt(0).toUpperCase()+cat.slice(1)}</span>
+        <span style="color:var(--text2)">${done}/${total} · ${pct}%</span>
+      </div>
+      <div style="background:#0e121060;border-radius:30px;height:7px;overflow:hidden;border:1px solid #2a383840;">
+        <div style="height:100%;width:${pct}%;border-radius:30px;background:${catColors[cat]};transition:width 1.2s ease;box-shadow:0 0 8px ${catColors[cat]}40;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // insight
+  const insights = [
+    `You've completed ${s.done} out of ${s.total} tasks — you're ${s.pct}% there! Keep pushing, every task brings you closer to Full Bloom 🌸`,
+    `Your streak is at ${state.streak} days — consistency is your superpower! Don't break the chain 🔥`,
+    `You've earned ${s.xp} XP so far. ${s.next ? `Just ${s.next.xp - s.xp} more XP to reach the "${s.next.name}" level!` : 'You\'ve reached the top level — incredible! 🏆'}`,
+    `Academic tasks are your main focus. Great job staying on top of your studies! 📚`,
+  ];
+  document.getElementById('rep-insight').textContent = insights[Math.floor(Math.random()*insights.length)];
+}
+
+// ── PROGRESS ──
+function renderProgress(s) {
+  renderPlantSVG('prog-plant-svg', s.plantIdx);
+  renderPlantDots('prog-plant-dots', s.plantIdx);
+  document.getElementById('prog-pname').textContent   = PLANT_STAGES[s.plantIdx].name;
+  document.getElementById('prog-psub').textContent    = PLANT_STAGES[s.plantIdx].sub;
+  document.getElementById('prog-summary').textContent = `${s.done} out of ${s.total} completed`;
+  document.getElementById('prog-xp-txt').textContent  = `${s.xpIn}/${s.xpNd}`;
+  document.getElementById('prog-lev-badge').textContent = `⚡ Level ${s.li+1} — ${s.lev.name}`;
+
+  // animated donut
+  const circ = 2*Math.PI*41, offset = circ - (s.pct/100)*circ;
+  setTimeout(() => {
+    document.getElementById('donut-fill').style.strokeDashoffset = offset;
+    countUp(document.getElementById('donut-pct'), s.pct, 1400, '%');
+  }, 200);
+  setTimeout(() => { document.getElementById('prog-xp-bar').style.width = s.xpPct+'%'; }, 200);
+
+  // extra stat cards
+  countUp(document.getElementById('prog-total-xp'),   s.xp);
+  countUp(document.getElementById('prog-pending'),     s.total - s.done);
+  countUp(document.getElementById('prog-streak-val'),  state.streak);
+
+  // level journey path
+  const pathEl = document.getElementById('level-path');
+  pathEl.innerHTML = LEVELS.map((lev, i) => {
+    const reached  = s.xp >= lev.xp;
+    const current  = i === s.li;
+    const isLast   = i === LEVELS.length - 1;
+    return `
+      <div style="display:flex;align-items:center;flex:1;min-width:80px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;">
+          <div style="
+            width:38px;height:38px;border-radius:50%;
+            background:${current?'var(--green)':reached?'#2e7d3260':'#1c2420'};
+            border:2px solid ${current?'var(--green)':reached?'var(--green)':'#2a3830'};
+            display:flex;align-items:center;justify-content:center;
+            font-size:${current?'1rem':'0.8rem'};
+            box-shadow:${current?'0 0 16px #4caf5060':'none'};
+            transition:all 0.3s ease;
+          ">${reached ? (current?'⚡':'✓') : (i+1)}</div>
+          <div style="font-size:0.68rem;color:${current?'var(--green)':reached?'var(--text2)':'var(--text3)'};font-weight:${current?'700':'400'};text-align:center;">${lev.name}</div>
+          <div style="font-size:0.6rem;color:var(--text3);">${lev.xp} XP</div>
+        </div>
+        ${!isLast ? `<div style="flex:1;height:2px;background:${s.xp>=LEVELS[i+1].xp?'var(--green)':'#2a3830'};margin:0 4px;margin-bottom:24px;border-radius:2px;transition:background 0.5s ease;max-width:40px;"></div>` : ''}
+      </div>`;
+  }).join('');
+
+  // badges
+  document.getElementById('prog-badges').innerHTML = BADGES_DEF.map(b => {
+    const e = s.earned.find(x => x.id===b.id);
+    return `<div class="badge-chip ${e?'earned':''}" title="${e?'Earned!':'Not yet earned'}">${b.icon} ${b.name} <span style="font-size:0.68rem;opacity:0.5;margin-left:3px">${e?'✓':'—'}</span></div>`;
+  }).join('');
+}
+
+// ── NAV ──
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  renderAll();
+}
+
+// ── FOCUS MODE ──
+let fInt=null, fSecs=25*60, fRun=false, fId=null;
+function openFocus(id) {
+  const t = state.tasks.find(x=>x.id===id); if(!t) return;
+  fId=id; fSecs=25*60; fRun=false;
+  document.getElementById('ftask-name').textContent = t.title;
+  document.getElementById('ftask-desc').textContent = t.description;
+  document.getElementById('focus-timer').textContent = '25:00';
+  document.getElementById('focus-start-btn').textContent = 'Start';
+  document.getElementById('focus-overlay').classList.add('open');
+}
+function closeFocus() { clearInterval(fInt); fRun=false; document.getElementById('focus-overlay').classList.remove('open'); }
+function toggleTimer() {
+  if (fRun) { clearInterval(fInt); fRun=false; document.getElementById('focus-start-btn').textContent='Resume'; }
+  else {
+    fRun=true; document.getElementById('focus-start-btn').textContent='Pause';
+    fInt = setInterval(()=>{
+      fSecs--;
+      if(fSecs<=0){clearInterval(fInt);fRun=false;showToast('⏱️ Focus session complete!');}
+      const m=String(Math.floor(fSecs/60)).padStart(2,'0'), sc=String(fSecs%60).padStart(2,'0');
+      document.getElementById('focus-timer').textContent=`${m}:${sc}`;
+    },1000);
+  }
+}
+function focusDone() { if(fId) completeTask(fId); closeFocus(); }
+
+// ── MICRO WIN ──
+function microWin() {
+  for (let i=0; i<10; i++) {
+    setTimeout(()=>{
+      const el=document.createElement('div'); el.className='spark';
+      const tx=(Math.random()-0.5)*240, ty=-(70+Math.random()*130);
+      el.style.cssText=`left:${25+Math.random()*50}vw;top:${25+Math.random()*35}vh;--tx:${tx}px;--ty:${ty}px;`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 900);
+    }, i*75);
+  }
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3200);
+}
+
+init();
+</script>
+</body>
+</html>
